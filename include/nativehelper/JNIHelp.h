@@ -37,7 +37,8 @@ extern "C" {
 
 /*
  * Register one or more native methods with a particular class.
- * "className" looks like "java/lang/String".
+ * "className" looks like "java/lang/String". Aborts on failure.
+ * TODO: fix all callers and change the return type to void.
  */
 int jniRegisterNativeMethods(C_JNIEnv* env, const char* className, const JNINativeMethod* gMethods, int numMethods);
 

@@ -310,26 +310,32 @@ static struct CachedFields {
     jfieldID descriptorField;
 } gCachedFields;
 
-int registerJniHelp(JNIEnv* env) {
+jint JNI_OnLoad(JavaVM* vm, void*) {
+    JNIEnv* env;
+    if (vm->GetEnv(reinterpret_cast<void**>(&env), JNI_VERSION_1_6) != JNI_OK) {
+        ALOGE("JavaVM::GetEnv() failed");
+        abort();
+    }
+
     gCachedFields.fileDescriptorClass =
             reinterpret_cast<jclass>(env->NewGlobalRef(env->FindClass("java/io/FileDescriptor")));
     if (gCachedFields.fileDescriptorClass == NULL) {
-        return -1;
+        abort();
     }
 
     gCachedFields.fileDescriptorCtor =
             env->GetMethodID(gCachedFields.fileDescriptorClass, "<init>", "()V");
     if (gCachedFields.fileDescriptorCtor == NULL) {
-        return -1;
+        abort();
     }
 
     gCachedFields.descriptorField =
             env->GetFieldID(gCachedFields.fileDescriptorClass, "descriptor", "I");
     if (gCachedFields.descriptorField == NULL) {
-        return -1;
+        abort();
     }
 
-    return 0;
+    return JNI_VERSION_1_6;
 }
 
 jobject jniCreateFileDescriptor(C_JNIEnv* env, int fd) {
