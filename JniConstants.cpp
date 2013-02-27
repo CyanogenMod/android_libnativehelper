@@ -51,7 +51,6 @@ jclass JniConstants::realToStringClass;
 jclass JniConstants::shortClass;
 jclass JniConstants::socketClass;
 jclass JniConstants::socketImplClass;
-jclass JniConstants::stringArrayClass;
 jclass JniConstants::stringClass;
 jclass JniConstants::structAddrinfoClass;
 jclass JniConstants::structFlockClass;
@@ -107,7 +106,6 @@ void JniConstants::init(JNIEnv* env) {
     shortClass = findClass(env, "java/lang/Short");
     socketClass = findClass(env, "java/net/Socket");
     socketImplClass = findClass(env, "java/net/SocketImpl");
-    stringArrayClass = findClass(env, "[Ljava/lang/String;");
     stringClass = findClass(env, "java/lang/String");
     structAddrinfoClass = findClass(env, "libcore/io/StructAddrinfo");
     structFlockClass = findClass(env, "libcore/io/StructFlock");
