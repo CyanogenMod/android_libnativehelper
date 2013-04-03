@@ -75,6 +75,7 @@ struct JniConstants {
     static jclass parsePositionClass;
     static jclass patternSyntaxExceptionClass;
     static jclass realToStringClass;
+    static jclass referenceClass;
     static jclass shortClass;
     static jclass socketClass;
     static jclass socketImplClass;

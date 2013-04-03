@@ -330,6 +330,12 @@ void jniSetFileDescriptorOfFD(C_JNIEnv* env, jobject fileDescriptor, int value) 
     (*env)->SetIntField(e, fileDescriptor, fid, value);
 }
 
+jobject jniGetReferent(C_JNIEnv* env, jobject ref) {
+    JNIEnv* e = reinterpret_cast<JNIEnv*>(env);
+    static jmethodID get = e->GetMethodID(JniConstants::referenceClass, "get", "()Ljava/lang/Object;");
+    return (*env)->CallObjectMethod(e, ref, get);
+}
+
 /*
  * DO NOT USE THIS FUNCTION
  *
