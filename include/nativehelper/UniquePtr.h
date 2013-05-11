@@ -17,6 +17,7 @@
 #ifndef UNIQUE_PTR_H_included
 #define UNIQUE_PTR_H_included
 
+#include <algorithm> // For std::swap
 #include <cstdlib> // For NULL.
 
 // Default deleter for pointer types.
@@ -78,6 +79,11 @@ public:
             D()(mPtr);
             mPtr = ptr;
         }
+    }
+
+    // Swap with another unique pointer.
+    void swap(UniquePtr<T>& other) {
+      std::swap(mPtr, other.mPtr);
     }
 
 private:
