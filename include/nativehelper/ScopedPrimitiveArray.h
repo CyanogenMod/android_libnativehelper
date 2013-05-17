@@ -26,6 +26,8 @@
 #define INSTANTIATE_SCOPED_PRIMITIVE_ARRAY_RO(PRIMITIVE_TYPE, NAME) \
     class Scoped ## NAME ## ArrayRO { \
     public: \
+        explicit Scoped ## NAME ## ArrayRO(JNIEnv* env) \
+        : mEnv(env), mJavaArray(NULL), mRawArray(NULL) {} \
         Scoped ## NAME ## ArrayRO(JNIEnv* env, PRIMITIVE_TYPE ## Array javaArray) \
         : mEnv(env), mJavaArray(javaArray), mRawArray(NULL) { \
             if (mJavaArray == NULL) { \
@@ -38,6 +40,10 @@
             if (mRawArray) { \
                 mEnv->Release ## NAME ## ArrayElements(mJavaArray, mRawArray, JNI_ABORT); \
             } \
+        } \
+        void reset(PRIMITIVE_TYPE ## Array javaArray) { \
+            mJavaArray = javaArray; \
+            mRawArray = mEnv->Get ## NAME ## ArrayElements(mJavaArray, NULL); \
         } \
         const PRIMITIVE_TYPE* get() const { return mRawArray; } \
         PRIMITIVE_TYPE ## Array getJavaArray() const { return mJavaArray; } \
@@ -69,6 +75,8 @@ INSTANTIATE_SCOPED_PRIMITIVE_ARRAY_RO(jshort, Short);
 #define INSTANTIATE_SCOPED_PRIMITIVE_ARRAY_RW(PRIMITIVE_TYPE, NAME) \
     class Scoped ## NAME ## ArrayRW { \
     public: \
+        explicit Scoped ## NAME ## ArrayRW(JNIEnv* env) \
+        : mEnv(env), mJavaArray(NULL), mRawArray(NULL) {} \
         Scoped ## NAME ## ArrayRW(JNIEnv* env, PRIMITIVE_TYPE ## Array javaArray) \
         : mEnv(env), mJavaArray(javaArray), mRawArray(NULL) { \
             if (mJavaArray == NULL) { \
@@ -81,6 +89,10 @@ INSTANTIATE_SCOPED_PRIMITIVE_ARRAY_RO(jshort, Short);
             if (mRawArray) { \
                 mEnv->Release ## NAME ## ArrayElements(mJavaArray, mRawArray, 0); \
             } \
+        } \
+        void reset(PRIMITIVE_TYPE ## Array javaArray) { \
+            mJavaArray = javaArray; \
+            mRawArray = mEnv->Get ## NAME ## ArrayElements(mJavaArray, NULL); \
         } \
         const PRIMITIVE_TYPE* get() const { return mRawArray; } \
         PRIMITIVE_TYPE ## Array getJavaArray() const { return mJavaArray; } \
