@@ -18,6 +18,7 @@ LOCAL_PATH := $(call my-dir)
 local_src_files := \
     JNIHelp.cpp \
     JniConstants.cpp \
+    JniInvocation.cpp \
     toStringArray.cpp
 
 
@@ -30,10 +31,10 @@ LOCAL_SRC_FILES := $(local_src_files)
 LOCAL_SHARED_LIBRARIES := liblog
 LOCAL_MODULE_TAGS := optional
 LOCAL_MODULE := libnativehelper
-
+LOCAL_CFLAGS := -Werror
 LOCAL_C_INCLUDES := external/stlport/stlport bionic/ bionic/libstdc++/include libcore/include
-LOCAL_SHARED_LIBRARIES += libstlport
-
+LOCAL_SHARED_LIBRARIES += libcutils libstlport libdl
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 include $(BUILD_SHARED_LIBRARY)
 
 
@@ -45,6 +46,9 @@ include $(CLEAR_VARS)
 LOCAL_MODULE := libnativehelper
 LOCAL_MODULE_TAGS := optional
 LOCAL_SRC_FILES := $(local_src_files)
+LOCAL_CFLAGS := -Werror
 LOCAL_C_INCLUDES := libcore/include
 LOCAL_SHARED_LIBRARIES := liblog
+LOCAL_LDFLAGS := -ldl
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 include $(BUILD_HOST_SHARED_LIBRARY)
