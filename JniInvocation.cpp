@@ -50,7 +50,7 @@ JniInvocation::~JniInvocation() {
 bool JniInvocation::Init(const char* library) {
 #ifdef HAVE_ANDROID_OS
   char default_library[PROPERTY_VALUE_MAX];
-  property_get("dalvik.vm.lib", default_library, "libdvm.so");
+  property_get("persist.sys.dalvik.vm.lib", default_library, "libdvm.so");
 #else
   const char* default_library = "libdvm.so";
 #endif

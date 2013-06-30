@@ -24,8 +24,8 @@
 // selected dynamically. Apps can specify a specific implementation to
 // be used by calling InitJniInvocation. If this is not done, the
 // library will chosen based on the value of Android system property
-// dalvik.vm.lib on the device, and otherwise fall back to a hard-coded
-// default implementation.
+// persist.sys.dalvik.vm.lib on the device, and otherwise fall back to
+// a hard-coded default implementation.
 class JniInvocation {
  public:
   JniInvocation();
@@ -34,7 +34,8 @@ class JniInvocation {
 
   // Initialize JNI invocation API. library should specifiy a valid
   // shared library for opening via dlopen providing a JNI invocation
-  // implementation, or null to allow defaulting via dalvik.vm.lib.
+  // implementation, or null to allow defaulting via
+  // persist.sys.dalvik.vm.lib.
   bool Init(const char* library);
 
  private:
