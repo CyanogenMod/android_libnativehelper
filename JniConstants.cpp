@@ -65,7 +65,7 @@ jclass JniConstants::structLingerClass;
 jclass JniConstants::structPasswdClass;
 jclass JniConstants::structPollfdClass;
 jclass JniConstants::structStatClass;
-jclass JniConstants::structStatFsClass;
+jclass JniConstants::structStatVfsClass;
 jclass JniConstants::structTimevalClass;
 jclass JniConstants::structUcredClass;
 jclass JniConstants::structUtsnameClass;
@@ -127,7 +127,7 @@ void JniConstants::init(JNIEnv* env) {
     structPasswdClass = findClass(env, "libcore/io/StructPasswd");
     structPollfdClass = findClass(env, "libcore/io/StructPollfd");
     structStatClass = findClass(env, "libcore/io/StructStat");
-    structStatFsClass = findClass(env, "libcore/io/StructStatFs");
+    structStatVfsClass = findClass(env, "libcore/io/StructStatVfs");
     structTimevalClass = findClass(env, "libcore/io/StructTimeval");
     structUcredClass = findClass(env, "libcore/io/StructUcred");
     structUtsnameClass = findClass(env, "libcore/io/StructUtsname");
