@@ -97,6 +97,11 @@ int jniGetFDFromFileDescriptor(C_JNIEnv* env, jobject fileDescriptor);
 void jniSetFileDescriptorOfFD(C_JNIEnv* env, jobject fileDescriptor, int value);
 
 /*
+ * Returns the reference from a java.lang.ref.Reference.
+ */
+jobject jniGetReferent(C_JNIEnv* env, jobject ref);
+
+/*
  * Log a message and an exception.
  * If exception is NULL, logs the current exception in the JNI environment.
  */
@@ -155,6 +160,10 @@ inline int jniGetFDFromFileDescriptor(JNIEnv* env, jobject fileDescriptor) {
 
 inline void jniSetFileDescriptorOfFD(JNIEnv* env, jobject fileDescriptor, int value) {
     jniSetFileDescriptorOfFD(&env->functions, fileDescriptor, value);
+}
+
+inline jobject jniGetReferent(JNIEnv* env, jobject ref) {
+    return jniGetReferent(&env->functions, ref);
 }
 
 inline void jniLogException(JNIEnv* env, int priority, const char* tag, jthrowable exception = NULL) {

@@ -72,13 +72,15 @@ extern "C" int jniRegisterNativeMethods(C_JNIEnv* env, const char* className,
 
     scoped_local_ref<jclass> c(env, findClass(env, className));
     if (c.get() == NULL) {
-        ALOGE("Native registration unable to find class '%s', aborting", className);
-        abort();
+        char* msg;
+        asprintf(&msg, "Native registration unable to find class '%s', aborting", className);
+        e->FatalError(msg);
     }
 
     if ((*env)->RegisterNatives(e, c.get(), gMethods, numMethods) < 0) {
-        ALOGE("RegisterNatives failed for '%s', aborting", className);
-        abort();
+        char* msg;
+        asprintf(&msg, "RegisterNatives failed for '%s', aborting", className);
+        e->FatalError(msg);
     }
 
     return 0;
@@ -304,11 +306,15 @@ const char* jniStrError(int errnum, char* buf, size_t buflen) {
     }
 }
 
-static struct CachedFields {
-    jclass fileDescriptorClass;
-    jmethodID fileDescriptorCtor;
-    jfieldID descriptorField;
-} gCachedFields;
+static struct {
+    jclass clazz;
+    jmethodID ctor;
+    jfieldID descriptor;
+} gFileDescriptorClassInfo;
+
+static struct {
+    jmethodID get;
+} gReferenceClassInfo;
 
 jint JNI_OnLoad(JavaVM* vm, void*) {
     JNIEnv* env;
@@ -317,21 +323,31 @@ jint JNI_OnLoad(JavaVM* vm, void*) {
         abort();
     }
 
-    gCachedFields.fileDescriptorClass =
+    gFileDescriptorClassInfo.clazz =
             reinterpret_cast<jclass>(env->NewGlobalRef(env->FindClass("java/io/FileDescriptor")));
-    if (gCachedFields.fileDescriptorClass == NULL) {
+    if (gFileDescriptorClassInfo.clazz == NULL) {
         abort();
     }
 
-    gCachedFields.fileDescriptorCtor =
-            env->GetMethodID(gCachedFields.fileDescriptorClass, "<init>", "()V");
-    if (gCachedFields.fileDescriptorCtor == NULL) {
+    gFileDescriptorClassInfo.ctor =
+            env->GetMethodID(gFileDescriptorClassInfo.clazz, "<init>", "()V");
+    if (gFileDescriptorClassInfo.ctor == NULL) {
         abort();
     }
 
-    gCachedFields.descriptorField =
-            env->GetFieldID(gCachedFields.fileDescriptorClass, "descriptor", "I");
-    if (gCachedFields.descriptorField == NULL) {
+    gFileDescriptorClassInfo.descriptor =
+            env->GetFieldID(gFileDescriptorClassInfo.clazz, "descriptor", "I");
+    if (gFileDescriptorClassInfo.descriptor == NULL) {
+        abort();
+    }
+
+    jclass clazz = reinterpret_cast<jclass>(env->FindClass("java/lang/ref/Reference"));
+    if (clazz == NULL) {
+        abort();
+    }
+
+    gReferenceClassInfo.get = env->GetMethodID(clazz, "get", "()Ljava/lang/Object;");
+    if (gReferenceClassInfo.get == NULL) {
         abort();
     }
 
@@ -341,19 +357,24 @@ jint JNI_OnLoad(JavaVM* vm, void*) {
 jobject jniCreateFileDescriptor(C_JNIEnv* env, int fd) {
     JNIEnv* e = reinterpret_cast<JNIEnv*>(env);
     jobject fileDescriptor = (*env)->NewObject(e,
-            gCachedFields.fileDescriptorClass, gCachedFields.fileDescriptorCtor);
+            gFileDescriptorClassInfo.clazz, gFileDescriptorClassInfo.ctor);
     jniSetFileDescriptorOfFD(env, fileDescriptor, fd);
     return fileDescriptor;
 }
 
 int jniGetFDFromFileDescriptor(C_JNIEnv* env, jobject fileDescriptor) {
     JNIEnv* e = reinterpret_cast<JNIEnv*>(env);
-    return (*env)->GetIntField(e, fileDescriptor, gCachedFields.descriptorField);
+    return (*env)->GetIntField(e, fileDescriptor, gFileDescriptorClassInfo.descriptor);
 }
 
 void jniSetFileDescriptorOfFD(C_JNIEnv* env, jobject fileDescriptor, int value) {
     JNIEnv* e = reinterpret_cast<JNIEnv*>(env);
-    (*env)->SetIntField(e, fileDescriptor, gCachedFields.descriptorField, value);
+    (*env)->SetIntField(e, fileDescriptor, gFileDescriptorClassInfo.descriptor, value);
+}
+
+jobject jniGetReferent(C_JNIEnv* env, jobject ref) {
+    JNIEnv* e = reinterpret_cast<JNIEnv*>(env);
+    return (*env)->CallObjectMethod(e, ref, gReferenceClassInfo.get);
 }
 
 /*
