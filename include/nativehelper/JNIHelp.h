@@ -33,12 +33,6 @@
 # define NELEM(x) ((int) (sizeof(x) / sizeof((x)[0])))
 #endif
 
-// TODO: the build system doesn't ensure the standard C++ library header files are on the include
-// path when compiling C++, and this file is included all over the place.
-#ifdef LIBCORE_CPP_JNI_HELPERS
-#include <string>
-#endif // LIBCORE_CPP_JNI_HELPERS
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -177,16 +171,6 @@ inline jobject jniGetReferent(JNIEnv* env, jobject ref) {
 inline void jniLogException(JNIEnv* env, int priority, const char* tag, jthrowable exception = NULL) {
     jniLogException(&env->functions, priority, tag, exception);
 }
-
-#ifdef LIBCORE_CPP_JNI_HELPERS
-
-extern "C" std::string jniGetStackTrace(C_JNIEnv* env, jthrowable exception);
-
-inline std::string jniGetStackTrace(JNIEnv* env, jthrowable exception = NULL) {
-  return jniGetStackTrace(&env->functions, exception);
-}
-
-#endif // LIBCORE_CPP_JNI_HELPERS
 
 #endif
 
