@@ -256,12 +256,7 @@ int jniThrowIOException(C_JNIEnv* env, int errnum) {
     return jniThrowException(env, "java/io/IOException", message);
 }
 
-void jniLogException(C_JNIEnv* env, int priority, const char* tag, jthrowable exception) {
-    std::string trace(jniGetStackTrace(env, exception));
-    __android_log_write(priority, tag, trace.c_str());
-}
-
-extern "C" std::string jniGetStackTrace(C_JNIEnv* env, jthrowable exception) {
+static std::string jniGetStackTrace(C_JNIEnv* env, jthrowable exception) {
     JNIEnv* e = reinterpret_cast<JNIEnv*>(env);
 
     scoped_local_ref<jthrowable> currentException(env, (*env)->ExceptionOccurred(e));
@@ -287,6 +282,11 @@ extern "C" std::string jniGetStackTrace(C_JNIEnv* env, jthrowable exception) {
     }
 
     return trace;
+}
+
+void jniLogException(C_JNIEnv* env, int priority, const char* tag, jthrowable exception) {
+    std::string trace(jniGetStackTrace(env, exception));
+    __android_log_write(priority, tag, trace.c_str());
 }
 
 const char* jniStrError(int errnum, char* buf, size_t buflen) {
