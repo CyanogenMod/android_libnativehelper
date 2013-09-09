@@ -20,8 +20,9 @@
 
 #include "JniConstants.h"
 #include "JNIHelp.h"
-#include "cutils/log.h"
+#include "ALog-priv.h"
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
