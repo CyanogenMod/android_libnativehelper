@@ -16,8 +16,6 @@
 
 #define LOG_TAG "JNIHelp"
 
-#define LIBCORE_CPP_JNI_HELPERS
-
 #include "JniConstants.h"
 #include "JNIHelp.h"
 #include "cutils/log.h"
