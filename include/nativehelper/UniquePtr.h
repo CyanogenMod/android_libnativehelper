@@ -17,8 +17,12 @@
 #ifndef UNIQUE_PTR_H_included
 #define UNIQUE_PTR_H_included
 
-#include <algorithm> // For std::swap
 #include <cstdlib> // For NULL.
+
+// This is a fake declaration of std::swap to avoid including <algorithm>
+namespace std {
+template <class T> void swap(T&, T&);
+}
 
 // Default deleter for pointer types.
 template <typename T>
