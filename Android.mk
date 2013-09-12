@@ -18,7 +18,6 @@ LOCAL_PATH := $(call my-dir)
 local_src_files := \
     JNIHelp.cpp \
     JniConstants.cpp \
-    JniInvocation.cpp \
     toStringArray.cpp
 
 
@@ -27,7 +26,9 @@ local_src_files := \
 #
 
 include $(CLEAR_VARS)
-LOCAL_SRC_FILES := $(local_src_files)
+LOCAL_SRC_FILES := \
+    $(local_src_files) \
+    JniInvocation.cpp
 LOCAL_SHARED_LIBRARIES := liblog
 LOCAL_MODULE_TAGS := optional
 LOCAL_MODULE := libnativehelper
@@ -37,6 +38,26 @@ LOCAL_SHARED_LIBRARIES += libcutils libstlport libdl
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 include $(BUILD_SHARED_LIBRARY)
 
+#
+# NDK-only build for the target (device).
+# - Relies only on NDK exposed functionality.
+# - This doesn't include JniInvocation.
+#
+
+include $(CLEAR_VARS)
+LOCAL_MODULE_TAGS := optional
+LOCAL_MODULE := libnativehelper_compat
+LOCAL_C_INCLUDES := \
+    $(LOCAL_PATH)/include/nativehelper
+LOCAL_CFLAGS := -Werror
+LOCAL_SRC_FILES := $(local_src_files)
+LOCAL_LDFLAGS := -llog
+LOCAL_SDK_VERSION := 17
+LOCAL_NDK_STL_VARIANT := stlport_static
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
+include $(BUILD_SHARED_LIBRARY)
+
+
 
 #
 # Build for the host.
@@ -45,7 +66,9 @@ include $(BUILD_SHARED_LIBRARY)
 include $(CLEAR_VARS)
 LOCAL_MODULE := libnativehelper
 LOCAL_MODULE_TAGS := optional
-LOCAL_SRC_FILES := $(local_src_files)
+LOCAL_SRC_FILES := \
+    $(local_src_files) \
+    JniInvocation.cpp
 LOCAL_CFLAGS := -Werror
 LOCAL_C_INCLUDES := libcore/include
 LOCAL_SHARED_LIBRARIES := liblog
