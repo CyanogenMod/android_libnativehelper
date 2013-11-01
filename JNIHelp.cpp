@@ -309,14 +309,22 @@ jobject jniCreateFileDescriptor(C_JNIEnv* env, int fd) {
     JNIEnv* e = reinterpret_cast<JNIEnv*>(env);
     static jmethodID ctor = e->GetMethodID(JniConstants::fileDescriptorClass, "<init>", "()V");
     jobject fileDescriptor = (*env)->NewObject(e, JniConstants::fileDescriptorClass, ctor);
-    jniSetFileDescriptorOfFD(env, fileDescriptor, fd);
+    // NOTE: NewObject ensures that an OutOfMemoryError will be seen by the Java
+    // caller if the alloc fails, so we just return NULL when that happens.
+    if (fileDescriptor != NULL)  {
+        jniSetFileDescriptorOfFD(env, fileDescriptor, fd);
+    }
     return fileDescriptor;
 }
 
 int jniGetFDFromFileDescriptor(C_JNIEnv* env, jobject fileDescriptor) {
     JNIEnv* e = reinterpret_cast<JNIEnv*>(env);
     static jfieldID fid = e->GetFieldID(JniConstants::fileDescriptorClass, "descriptor", "I");
-    return (*env)->GetIntField(e, fileDescriptor, fid);
+    if (fileDescriptor != NULL) {
+        return (*env)->GetIntField(e, fileDescriptor, fid);
+    } else {
+        return -1;
+    }
 }
 
 void jniSetFileDescriptorOfFD(C_JNIEnv* env, jobject fileDescriptor, int value) {
