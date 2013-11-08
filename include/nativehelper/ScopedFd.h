@@ -18,6 +18,7 @@
 #define SCOPED_FD_H_included
 
 #include <unistd.h>
+#include "JNIHelp.h"  // for TEMP_FAILURE_RETRY
 
 // A smart pointer that closes the given fd on going out of scope.
 // Use this when the fd is incidental to the purpose of your function,
@@ -28,11 +29,19 @@ public:
     }
 
     ~ScopedFd() {
-        close(fd);
+        if (fd != -1) {
+            TEMP_FAILURE_RETRY(close(fd));
+        }
     }
 
     int get() const {
         return fd;
+    }
+
+    int release() __attribute__((warn_unused_result)) {
+        int localFd = fd;
+        fd = -1;
+        return localFd;
     }
 
 private:
