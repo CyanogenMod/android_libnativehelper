@@ -49,11 +49,25 @@ JniInvocation::~JniInvocation() {
 }
 
 #ifdef HAVE_ANDROID_OS
+extern "C" void android_get_LD_LIBRARY_PATH(char*, size_t);
+
+void Init_LD_LIBRARY_PATH() {
+  char ld_library_path[PATH_MAX];
+  android_get_LD_LIBRARY_PATH(ld_library_path, sizeof(ld_library_path));
+  setenv("LD_LIBRARY_PATH", ld_library_path, 0);
+}
+#endif
+
+#ifdef HAVE_ANDROID_OS
 static const char* kLibrarySystemProperty = "persist.sys.dalvik.vm.lib";
 #endif
 static const char* kLibraryFallback = "libdvm.so";
 
 bool JniInvocation::Init(const char* library) {
+#ifdef HAVE_ANDROID_OS
+  Init_LD_LIBRARY_PATH();
+#endif
+
 #ifdef HAVE_ANDROID_OS
   char default_library[PROPERTY_VALUE_MAX];
   property_get(kLibrarySystemProperty, default_library, kLibraryFallback);
