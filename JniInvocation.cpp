@@ -59,7 +59,7 @@ void Init_LD_LIBRARY_PATH() {
 #endif
 
 #ifdef HAVE_ANDROID_OS
-static const char* kLibrarySystemProperty = "persist.sys.dalvik.vm.lib";
+static const char* kLibrarySystemProperty = "persist.sys.dalvik.vm.lib.1";
 #endif
 static const char* kLibraryFallback = "libdvm.so";
 
