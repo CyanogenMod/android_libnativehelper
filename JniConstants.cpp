@@ -65,6 +65,7 @@ jclass JniConstants::stringClass;
 jclass JniConstants::structAddrinfoClass;
 jclass JniConstants::structFlockClass;
 jclass JniConstants::structGroupReqClass;
+jclass JniConstants::structGroupSourceReqClass;
 jclass JniConstants::structLingerClass;
 jclass JniConstants::structPasswdClass;
 jclass JniConstants::structPollfdClass;
@@ -128,6 +129,7 @@ void JniConstants::init(JNIEnv* env) {
     structAddrinfoClass = findClass(env, "libcore/io/StructAddrinfo");
     structFlockClass = findClass(env, "libcore/io/StructFlock");
     structGroupReqClass = findClass(env, "libcore/io/StructGroupReq");
+    structGroupSourceReqClass = findClass(env, "libcore/io/StructGroupSourceReq");
     structLingerClass = findClass(env, "libcore/io/StructLinger");
     structPasswdClass = findClass(env, "libcore/io/StructPasswd");
     structPollfdClass = findClass(env, "libcore/io/StructPollfd");
