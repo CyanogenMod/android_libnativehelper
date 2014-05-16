@@ -39,6 +39,24 @@ LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 include $(BUILD_SHARED_LIBRARY)
 
 #
+# Build for the target (device) using libc++.
+#
+
+include $(CLEAR_VARS)
+LOCAL_SRC_FILES := \
+    $(local_src_files) \
+    JniInvocation.cpp
+LOCAL_SHARED_LIBRARIES := liblog
+LOCAL_MODULE_TAGS := optional
+LOCAL_MODULE := libnativehelper_libc++
+LOCAL_CFLAGS := -Werror
+LOCAL_C_INCLUDES := libcore/include
+LOCAL_SHARED_LIBRARIES += libcutils libdl
+include external/libcxx/libcxx.mk
+LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
+include $(BUILD_SHARED_LIBRARY)
+
+#
 # NDK-only build for the target (device).
 # - Relies only on NDK exposed functionality.
 # - This doesn't include JniInvocation.
