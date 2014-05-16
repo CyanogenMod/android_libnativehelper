@@ -38,6 +38,8 @@ LOCAL_SHARED_LIBRARIES += libcutils libstlport libdl
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 include $(BUILD_SHARED_LIBRARY)
 
+# Don't build for unbundled branches
+ifeq (,$(TARGET_BUILD_APPS))
 #
 # Build for the target (device) using libc++.
 #
@@ -55,6 +57,7 @@ LOCAL_SHARED_LIBRARIES += libcutils libdl
 include external/libcxx/libcxx.mk
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 include $(BUILD_SHARED_LIBRARY)
+endif
 
 #
 # NDK-only build for the target (device).
