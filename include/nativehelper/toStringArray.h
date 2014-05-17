@@ -45,7 +45,27 @@ jobjectArray toStringArray(JNIEnv* env, Counter* counter, Getter* getter) {
     return result;
 }
 
-JNIEXPORT jobjectArray toStringArray(JNIEnv* env, const std::vector<std::string>& strings);
+struct VectorCounter {
+    const std::vector<std::string>& strings;
+    VectorCounter(const std::vector<std::string>& strings) : strings(strings) {}
+    size_t operator()() {
+        return strings.size();
+    }
+};
+struct VectorGetter {
+    const std::vector<std::string>& strings;
+    VectorGetter(const std::vector<std::string>& strings) : strings(strings) {}
+    const char* operator()(size_t i) {
+        return strings[i].c_str();
+    }
+};
+
+inline jobjectArray toStringArray(JNIEnv* env, const std::vector<std::string>& strings) {
+    VectorCounter counter(strings);
+    VectorGetter getter(strings);
+    return toStringArray<VectorCounter, VectorGetter>(env, &counter, &getter);
+}
+
 JNIEXPORT jobjectArray toStringArray(JNIEnv* env, const char* const* strings);
 
 #endif  // TO_STRING_ARRAY_H_included
