@@ -17,32 +17,8 @@
 #include "JniConstants.h"
 #include "toStringArray.h"
 
-#include <string>
-#include <vector>
-
 jobjectArray newStringArray(JNIEnv* env, size_t count) {
     return env->NewObjectArray(count, JniConstants::stringClass, NULL);
-}
-
-struct VectorCounter {
-    const std::vector<std::string>& strings;
-    VectorCounter(const std::vector<std::string>& strings) : strings(strings) {}
-    size_t operator()() {
-        return strings.size();
-    }
-};
-struct VectorGetter {
-    const std::vector<std::string>& strings;
-    VectorGetter(const std::vector<std::string>& strings) : strings(strings) {}
-    const char* operator()(size_t i) {
-        return strings[i].c_str();
-    }
-};
-
-jobjectArray toStringArray(JNIEnv* env, const std::vector<std::string>& strings) {
-    VectorCounter counter(strings);
-    VectorGetter getter(strings);
-    return toStringArray<VectorCounter, VectorGetter>(env, &counter, &getter);
 }
 
 struct ArrayCounter {
