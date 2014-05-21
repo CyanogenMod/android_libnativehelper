@@ -26,6 +26,7 @@
 #define NATIVEHELPER_JNIHELP_H_
 
 #include "jni.h"
+#include <errno.h>
 #include <unistd.h>
 
 #ifndef NELEM
