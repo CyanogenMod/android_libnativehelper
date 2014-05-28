@@ -49,7 +49,7 @@ JniInvocation::~JniInvocation() {
 }
 
 #ifdef HAVE_ANDROID_OS
-static const char* kLibrarySystemProperty = "persist.sys.dalvik.vm.lib.1";
+static const char* kLibrarySystemProperty = "persist.sys.dalvik.vm.lib.2";
 #endif
 static const char* kLibraryFallback = "libart.so";
 
