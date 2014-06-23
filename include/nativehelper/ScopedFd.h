@@ -29,9 +29,7 @@ public:
     }
 
     ~ScopedFd() {
-        if (fd != -1) {
-            TEMP_FAILURE_RETRY(close(fd));
-        }
+      reset();
     }
 
     int get() const {
@@ -42,6 +40,13 @@ public:
         int localFd = fd;
         fd = -1;
         return localFd;
+    }
+
+    void reset(int new_fd = -1) {
+      if (fd != -1) {
+          TEMP_FAILURE_RETRY(close(fd));
+      }
+      fd = new_fd;
     }
 
 private:
