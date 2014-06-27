@@ -172,16 +172,16 @@ static bool getStackTrace(C_JNIEnv* env, jthrowable exception, std::string& resu
         return false;
     }
 
-    jobject printWriter =
-            (*env)->NewObject(e, printWriterClass.get(), printWriterCtor, stringWriter.get());
-    if (printWriter == NULL) {
+    scoped_local_ref<jobject> printWriter(env,
+            (*env)->NewObject(e, printWriterClass.get(), printWriterCtor, stringWriter.get()));
+    if (printWriter.get() == NULL) {
         return false;
     }
 
     scoped_local_ref<jclass> exceptionClass(env, (*env)->GetObjectClass(e, exception)); // can't fail
     jmethodID printStackTraceMethod =
             (*env)->GetMethodID(e, exceptionClass.get(), "printStackTrace", "(Ljava/io/PrintWriter;)V");
-    (*env)->CallVoidMethod(e, exception, printStackTraceMethod, printWriter);
+    (*env)->CallVoidMethod(e, exception, printStackTraceMethod, printWriter.get());
 
     if ((*env)->ExceptionCheck(e)) {
         return false;
