@@ -50,19 +50,43 @@ JniInvocation::~JniInvocation() {
 
 #ifdef HAVE_ANDROID_OS
 static const char* kLibrarySystemProperty = "persist.sys.dalvik.vm.lib.2";
+static const char* kDebuggableSystemProperty = "ro.debuggable";
+static const char* kDebuggableFallback = "0";  // Not debuggable.
 #endif
 static const char* kLibraryFallback = "libart.so";
 
-bool JniInvocation::Init(const char* library) {
+const char* JniInvocation::GetLibrary(const char* library) {
 #ifdef HAVE_ANDROID_OS
   char default_library[PROPERTY_VALUE_MAX];
-  property_get(kLibrarySystemProperty, default_library, kLibraryFallback);
+
+  char debuggable[PROPERTY_VALUE_MAX];
+  property_get(kDebuggableSystemProperty, debuggable, kDebuggableFallback);
+
+  if (strcmp(debuggable, "1") != 0) {
+    // Not a debuggable build.
+    // Do not allow arbitrary library. Ignore the library parameter. This
+    // will also ignore the default library, but initialize to empty string
+    // for cleanliness.
+    library = kLibraryFallback;
+    default_library[0] = 0;
+  } else {
+    // Debuggable build.
+    // Accept the library parameter. For the case it is NULL, load the default
+    // library from the system property.
+    property_get(kLibrarySystemProperty, default_library, kLibraryFallback);
+  }
 #else
   const char* default_library = kLibraryFallback;
 #endif
   if (library == NULL) {
     library = default_library;
   }
+
+  return library;
+}
+
+bool JniInvocation::Init(const char* library) {
+  library = GetLibrary(library);
 
   handle_ = dlopen(library, RTLD_NOW);
   if (handle_ == NULL) {

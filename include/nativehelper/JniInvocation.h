@@ -38,6 +38,9 @@ class JniInvocation {
   // persist.sys.dalvik.vm.lib.
   bool Init(const char* library);
 
+  // Exposes which library is actually loaded from the given name.
+  static const char* GetLibrary(const char* library);
+
  private:
 
   bool FindSymbol(void** pointer, const char* symbol);
