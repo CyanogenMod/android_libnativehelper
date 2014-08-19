@@ -14,6 +14,11 @@
  * limitations under the License.
  */
 
+#if defined(__ANDROID__)
+/* libnativehelper is built by NDK 19 in one variant, which doesn't yet have the GNU strerror_r. */
+#undef _GNU_SOURCE
+#endif
+
 #define LOG_TAG "JNIHelp"
 
 #include "JniConstants.h"
