@@ -33,8 +33,9 @@ LOCAL_SHARED_LIBRARIES := liblog
 LOCAL_MODULE_TAGS := optional
 LOCAL_MODULE := libnativehelper
 LOCAL_CFLAGS := -Werror -fvisibility=protected
-LOCAL_C_INCLUDES := external/stlport/stlport bionic/ bionic/libstdc++/include libcore/include
-LOCAL_SHARED_LIBRARIES += libcutils libstlport libdl
+LOCAL_C_INCLUDES := libcore/include
+LOCAL_SHARED_LIBRARIES += libcutils libdl
+LOCAL_CXX_STL := stlport
 LOCAL_ADDITIONAL_DEPENDENCIES := $(LOCAL_PATH)/Android.mk
 include $(BUILD_SHARED_LIBRARY)
 
