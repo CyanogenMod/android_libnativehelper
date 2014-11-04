@@ -18,6 +18,7 @@
 #define UNIQUE_PTR_H_included
 
 #include <cstdlib> // For NULL.
+#include "JNIHelp.h"  // For DISALLOW_COPY_AND_ASSIGN.
 
 // This is a fake declaration of std::swap to avoid including <algorithm>
 namespace std {
@@ -98,9 +99,7 @@ private:
     template <typename T2> bool operator==(const UniquePtr<T2>& p) const;
     template <typename T2> bool operator!=(const UniquePtr<T2>& p) const;
 
-    // Disallow copy and assignment.
-    UniquePtr(const UniquePtr&);
-    void operator=(const UniquePtr&);
+    DISALLOW_COPY_AND_ASSIGN(UniquePtr);
 };
 
 // Partial specialization for array types. Like std::unique_ptr, this removes
@@ -136,9 +135,7 @@ public:
 private:
     T* mPtr;
 
-    // Disallow copy and assignment.
-    UniquePtr(const UniquePtr&);
-    void operator=(const UniquePtr&);
+    DISALLOW_COPY_AND_ASSIGN(UniquePtr);
 };
 
 #if UNIQUE_PTR_TESTS
