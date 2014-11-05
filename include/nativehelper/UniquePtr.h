@@ -20,11 +20,6 @@
 #include <cstdlib> // For NULL.
 #include "JNIHelp.h"  // For DISALLOW_COPY_AND_ASSIGN.
 
-// This is a fake declaration of std::swap to avoid including <algorithm>
-namespace std {
-template <class T> void swap(T&, T&);
-}
-
 // Default deleter for pointer types.
 template <typename T>
 struct DefaultDelete {
@@ -84,11 +79,6 @@ public:
             D()(mPtr);
             mPtr = ptr;
         }
-    }
-
-    // Swap with another unique pointer.
-    void swap(UniquePtr<T>& other) {
-      std::swap(mPtr, other.mPtr);
     }
 
 private:
