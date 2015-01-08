@@ -74,6 +74,7 @@ jclass JniConstants::structStatVfsClass;
 jclass JniConstants::structTimevalClass;
 jclass JniConstants::structUcredClass;
 jclass JniConstants::structUtsnameClass;
+jclass JniConstants::zipEntryClass;
 
 static jclass findClass(JNIEnv* env, const char* name) {
     ScopedLocalRef<jclass> localClass(env, env->FindClass(name));
@@ -138,4 +139,5 @@ void JniConstants::init(JNIEnv* env) {
     structTimevalClass = findClass(env, "android/system/StructTimeval");
     structUcredClass = findClass(env, "android/system/StructUcred");
     structUtsnameClass = findClass(env, "android/system/StructUtsname");
+    zipEntryClass = findClass(env, "java/util/zip/ZipEntry");
 }
