@@ -25,7 +25,7 @@
 // but needs to be cleaned up on exit.
 class ScopedFd {
 public:
-    explicit ScopedFd(int fd) : fd(fd) {
+    explicit ScopedFd(int fd) : fd_(fd) {
     }
 
     ~ScopedFd() {
@@ -33,24 +33,24 @@ public:
     }
 
     int get() const {
-        return fd;
+        return fd_;
     }
 
     int release() __attribute__((warn_unused_result)) {
-        int localFd = fd;
-        fd = -1;
+        int localFd = fd_;
+        fd_ = -1;
         return localFd;
     }
 
     void reset(int new_fd = -1) {
-      if (fd != -1) {
-          TEMP_FAILURE_RETRY(close(fd));
+      if (fd_ != -1) {
+          TEMP_FAILURE_RETRY(close(fd_));
       }
-      fd = new_fd;
+      fd_ = new_fd;
     }
 
 private:
-    int fd;
+    int fd_;
 
     DISALLOW_COPY_AND_ASSIGN(ScopedFd);
 };
