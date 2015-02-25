@@ -69,6 +69,7 @@ struct JniConstants {
     static jclass methodClass;
     static jclass mutableIntClass;
     static jclass mutableLongClass;
+    static jclass netlinkSocketAddressClass;
     static jclass objectClass;
     static jclass objectArrayClass;
     static jclass outputStreamClass;
