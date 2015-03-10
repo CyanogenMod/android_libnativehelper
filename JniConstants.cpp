@@ -51,6 +51,7 @@ jclass JniConstants::longClass;
 jclass JniConstants::methodClass;
 jclass JniConstants::mutableIntClass;
 jclass JniConstants::mutableLongClass;
+jclass JniConstants::netlinkSocketAddressClass;
 jclass JniConstants::objectClass;
 jclass JniConstants::objectArrayClass;
 jclass JniConstants::outputStreamClass;
@@ -116,6 +117,7 @@ void JniConstants::init(JNIEnv* env) {
     methodClass = findClass(env, "java/lang/reflect/Method");
     mutableIntClass = findClass(env, "android/util/MutableInt");
     mutableLongClass = findClass(env, "android/util/MutableLong");
+    netlinkSocketAddressClass = findClass(env, "android/system/NetlinkSocketAddress");
     objectClass = findClass(env, "java/lang/Object");
     objectArrayClass = findClass(env, "[Ljava/lang/Object;");
     outputStreamClass = findClass(env, "java/io/OutputStream");
