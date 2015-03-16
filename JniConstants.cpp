@@ -55,6 +55,7 @@ jclass JniConstants::netlinkSocketAddressClass;
 jclass JniConstants::objectClass;
 jclass JniConstants::objectArrayClass;
 jclass JniConstants::outputStreamClass;
+jclass JniConstants::packetSocketAddressClass;
 jclass JniConstants::parsePositionClass;
 jclass JniConstants::patternSyntaxExceptionClass;
 jclass JniConstants::realToStringClass;
@@ -121,6 +122,7 @@ void JniConstants::init(JNIEnv* env) {
     objectClass = findClass(env, "java/lang/Object");
     objectArrayClass = findClass(env, "[Ljava/lang/Object;");
     outputStreamClass = findClass(env, "java/io/OutputStream");
+    packetSocketAddressClass = findClass(env, "android/system/PacketSocketAddress");
     parsePositionClass = findClass(env, "java/text/ParsePosition");
     patternSyntaxExceptionClass = findClass(env, "java/util/regex/PatternSyntaxException");
     realToStringClass = findClass(env, "java/lang/RealToString");
