@@ -18,7 +18,7 @@
 #define SCOPED_FD_H_included
 
 #include <unistd.h>
-#include "JNIHelp.h"  // for TEMP_FAILURE_RETRY
+#include "JNIHelp.h"  // for DISALLOW_COPY_AND_ASSIGN.
 
 // A smart pointer that closes the given fd on going out of scope.
 // Use this when the fd is incidental to the purpose of your function,
@@ -44,7 +44,10 @@ public:
 
     void reset(int new_fd = -1) {
       if (fd_ != -1) {
-          TEMP_FAILURE_RETRY(close(fd_));
+        // Even if close(2) fails with EINTR, the fd will have been closed.
+        // Using TEMP_FAILURE_RETRY will either lead to EBADF or closing someone else's fd.
+        // http://lkml.indiana.edu/hypermail/linux/kernel/0509.1/0877.html
+        close(fd_);
       }
       fd_ = new_fd;
     }
